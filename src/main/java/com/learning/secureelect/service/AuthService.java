@@ -1,11 +1,14 @@
 package com.learning.secureelect.service;
 
+import com.learning.secureelect.dto.LoginRequest;
 import com.learning.secureelect.dto.RegisterRequest;
 import com.learning.secureelect.entity.User;
 import com.learning.secureelect.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -35,6 +38,22 @@ public class AuthService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    public String login(LoginRequest request) {
+        Optional<User> userEntity = userRepository.findByEmail(request.getEmail());
+
+        if( !userEntity.isPresent()) {
+            return "Invalid email or password";
+        }
+
+        User user = userEntity.get();
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())){
+            return "Invalid email or password";
+        }
+
+        return "Login successful";
     }
 
 }
