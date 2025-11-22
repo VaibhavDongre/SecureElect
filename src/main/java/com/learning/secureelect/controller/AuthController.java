@@ -1,6 +1,7 @@
 package com.learning.secureelect.controller;
 
 import com.learning.secureelect.dto.LoginRequest;
+import com.learning.secureelect.dto.LoginResponse;
 import com.learning.secureelect.dto.RegisterRequest;
 import com.learning.secureelect.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        String response = authService.login(request);
+        LoginResponse response = authService.login(request);
+
+        if (response == null) {
+            return ResponseEntity.status(401).body("Invalid email or password");
+        }
         return ResponseEntity.ok(response);
     }
 }

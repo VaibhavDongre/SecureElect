@@ -1,8 +1,10 @@
 package com.learning.secureelect.service;
 
 import com.learning.secureelect.dto.LoginRequest;
+import com.learning.secureelect.dto.LoginResponse;
 import com.learning.secureelect.dto.RegisterRequest;
 import com.learning.secureelect.entity.User;
+import com.learning.secureelect.jwt.JwtUtil;
 import com.learning.secureelect.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +21,9 @@ public class AuthService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public String register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -40,20 +45,30 @@ public class AuthService {
         return "User registered successfully";
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         Optional<User> userEntity = userRepository.findByEmail(request.getEmail());
 
+        //Find user by email
         if( !userEntity.isPresent()) {
-            return "Invalid email or password";
+            return null;
         }
 
         User user = userEntity.get();
 
+        //Verify password
         if(!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())){
-            return "Invalid email or password";
+            return null;
         }
 
-        return "Login successful";
+        //Generate JWT Token
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        //return login response
+        return new LoginResponse(
+                token,
+                user.getEmail(),
+                user.getRole()
+        );
     }
 
 }
