@@ -1,6 +1,6 @@
 package com.learning.secureelect.repository;
-
 import com.learning.secureelect.entity.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

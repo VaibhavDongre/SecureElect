@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -18,9 +20,14 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    //Generate the Token
-    public String generateToken(String email) {
+    //1.Generate the Token
+    //2.Update for role
+    public String generateToken(String email, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -31,6 +38,12 @@ public class JwtUtil {
     //Extract username(email) from token
     public String extractEmail(String token) {
         return  getClaims(token).getSubject();
+    }
+
+    //Extract role from token
+    //Typecasting-->Convert this Object to a String before returning it
+    public String extractRole(String token) {
+        return (String) getClaims(token).get("role");
     }
 
     //Validate Token
