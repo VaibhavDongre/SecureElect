@@ -1,5 +1,6 @@
 package com.learning.secureelect.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,6 +27,7 @@ public class Election {
     //cascade means if any operation happens on election then candidate will automatically be affected
     //means if election is deleted all the candidates in it will also be deleted
     @OneToMany(mappedBy = "election", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Candidate> candidates;
 }
 

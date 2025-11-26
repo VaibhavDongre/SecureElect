@@ -1,5 +1,6 @@
 package com.learning.secureelect.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,5 +19,6 @@ public class Candidate {
 
     @ManyToOne
     @JoinColumn(name = "election_id")
+    @JsonBackReference
     private Election election;
 }
