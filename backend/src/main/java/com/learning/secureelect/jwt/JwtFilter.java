@@ -34,9 +34,9 @@ public class JwtFilter extends OncePerRequestFilter {
         //Extracting token
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            role = jwtUtil.extractRole(token);
             try {
                 email = jwtUtil.extractEmail(token);
+                role = jwtUtil.extractRole(token);
             } catch (Exception e) {
                 System.out.println("JWT Error: " + e.getMessage());
             }
