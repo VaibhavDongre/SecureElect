@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -65,5 +66,16 @@ public class UserController {
         }).toList();
 
         return ResponseEntity.ok(response);
+
+//        List<Election> list = electionRepository.findAll()
+//                .stream()
+//                .filter(e->e.getEligibleVoters()
+//                        .stream()
+//                        .anyMatch(u->u.getId().equals(userId)))
+//                .collect(Collectors.toList());
+//
+//        //return list;
+//
+//        return ResponseEntity.ok(list);
     }
 }

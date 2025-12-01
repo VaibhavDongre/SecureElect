@@ -2,6 +2,9 @@ package com.learning.secureelect.controller;
 
 import com.learning.secureelect.entity.Candidate;
 import com.learning.secureelect.entity.Election;
+import com.learning.secureelect.entity.User;
+import com.learning.secureelect.repository.ElectionRepository;
+import com.learning.secureelect.repository.UserRepository;
 import com.learning.secureelect.service.ElectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,12 @@ public class ElectionController {
 
     @Autowired
     private ElectionService electionService;
+
+    @Autowired
+    private ElectionRepository electionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<?> createElection(@RequestBody Election election) {
@@ -50,6 +59,21 @@ public class ElectionController {
     public ResponseEntity<?> getStats(@PathVariable Long id) {
         Map<String, Object> stats = electionService.getElectionStats(id);
         return ResponseEntity.ok(stats);
+    }
+
+    @PostMapping("/elections/{electionId}/add-voter/{userId}")
+    public ResponseEntity<?> addVoter(@PathVariable Long electionId, @PathVariable Long userId) {
+
+        Election election = electionRepository.findById(electionId)
+                .orElseThrow(() -> new RuntimeException("Election not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new RuntimeException("User not found"));
+
+        election.getEligibleVoters().add(user);
+        electionRepository.save(election);
+
+        return ResponseEntity.ok("User added to eligible voters");
     }
 }
 

@@ -52,6 +52,11 @@ public class VotingServiceImpl implements VotingService{
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("user not found"));
 
+        //Check if user is eligible
+        boolean isEligible = election.getEligibleVoters()
+                .stream()
+                .anyMatch(u->u.getId().equals(userId));
+
         //Create and save Voter Record
         VoterRecord record = new VoterRecord();
         record.setUser(user);

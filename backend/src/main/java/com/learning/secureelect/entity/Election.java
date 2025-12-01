@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -29,6 +31,18 @@ public class Election {
     @OneToMany(mappedBy = "election", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Candidate> candidates;
+
+
+    //This will create a new table-->election_eligible_voters
+    //It will store pairs: (election_id, user_id)
+    //Means:This user is eligible for this election
+    @ManyToMany
+    @JoinTable(
+            name = "election_eligible_voters",
+            joinColumns = @JoinColumn(name = "election_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> eligibleVoters = new HashSet<>();
 }
 
 
