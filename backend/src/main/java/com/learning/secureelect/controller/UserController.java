@@ -1,16 +1,19 @@
 package com.learning.secureelect.controller;
 
 import com.learning.secureelect.dto.UserElectionDTO;
+import com.learning.secureelect.entity.Candidate;
 import com.learning.secureelect.entity.Election;
 import com.learning.secureelect.entity.User;
 import com.learning.secureelect.jwt.JwtUtil;
 import com.learning.secureelect.repository.ElectionRepository;
 import com.learning.secureelect.repository.UserRepository;
 import com.learning.secureelect.repository.VoterRecordRepository;
+import com.learning.secureelect.service.ElectionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ElectionService electionService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -77,5 +83,12 @@ public class UserController {
 //        //return list;
 //
 //        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/elections/{id}/results")
+    public ResponseEntity<?> getResultsForUser(@PathVariable Long id){
+        List<Candidate> list = electionService.getResults((id));
+        return ResponseEntity.ok(list);
+
     }
 }
