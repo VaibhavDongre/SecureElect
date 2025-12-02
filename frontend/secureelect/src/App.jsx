@@ -1,33 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { ToastContainer } from 'react-toastify'
 import './App.css'
+import Login from './pages/Login'
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
+import { Route, Routes } from 'react-router-dom'
+import AdminRoute from './components/AdminRoute';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminNavbar from './components/AdminNavbar';
+import CreateElectionModal from './components/CreateElectionModal';
+import Candidates from './pages/Candidates';
+import VotePage from './pages/VotePage';
+import ResultsPage from './pages/ResultsPage';
+import Register from './pages/Register';
+import AdminResults from './pages/AdminResults';
+import VoteConfirmation from './pages/VoteConfirmation';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <ToastContainer/>
+    <Routes>
+      Public Routes
+      <Route path='/' element={<Login/>} />
+      <Route path='/login' element={<Login/>} />
+      <Route path='/register' element={<Register/>} />
+
+      {/*Admin Routes*/}
+      <Route 
+        path='/admin/dashboard' 
+        element={
+          <AdminRoute>
+            <AdminDashboard/>
+          </AdminRoute>
+        }/>
+      <Route 
+        path='/admin/elections/:id/candidates'
+        element={
+          <AdminRoute>
+            <Candidates />
+          </AdminRoute>
+        }
+      />  
+
+      <Route
+        path='/admin/elections/:electionId/results'
+        element={<AdminResults/>}
+      />
+
+      <Route 
+        path='/vote/confirmation'
+        element={<VoteConfirmation/>}
+      />
+
+      {/*User Routes*/}
+      <Route 
+        path='/user/dashboard' 
+        element={
+          <ProtectedRoute>
+            <UserDashboard/>
+          </ProtectedRoute>
+        }/>
+
+    <Route 
+      path="/vote/:electionId" 
+      element={<VotePage />} />  
+
+
+    <Route 
+      path='/results/:electionId'
+      element={<ResultsPage/>}
+    />
+    </Routes>
     </>
   )
 }
