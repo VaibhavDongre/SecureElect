@@ -7,6 +7,7 @@ import com.learning.secureelect.repository.ElectionRepository;
 import com.learning.secureelect.repository.UserRepository;
 import com.learning.secureelect.service.ElectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +75,21 @@ public class ElectionController {
         electionRepository.save(election);
 
         return ResponseEntity.ok("User added to eligible voters");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteElection(@PathVariable Long id) {
+        Election election = electionRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Election not found"));
+
+        if (!election.isCompleted()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Only completed elections can be deleted");
+        }
+
+        election.setArchived(true);
+        electionRepository.save(election);
+        return ResponseEntity.ok("Election deleted successfully");
     }
 }
 

@@ -26,6 +26,9 @@ public class Election {
     private boolean active; //true means election open
     private boolean completed; //true means results calculated
 
+    @Column(nullable = false)
+    private Boolean archived = false; //for delete
+
     //cascade means if any operation happens on election then candidate will automatically be affected
     //means if election is deleted all the candidates in it will also be deleted
     @OneToMany(mappedBy = "election", cascade = CascadeType.ALL)
