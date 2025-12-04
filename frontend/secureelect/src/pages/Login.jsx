@@ -44,7 +44,7 @@ const Login = () => {
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{height: "100vh"}}>
       <div className="card p-4 shadow" style={{width: "380px"}}>
-        <h3 className="text-center mb-3">SecureElect Login</h3>
+        <h3 className="fw-bold text-center mb-4">Login</h3>
 
         <form onSubmit={handleSubmit}>
             <div className='mb-3'>
@@ -74,6 +74,16 @@ const Login = () => {
             </div>
 
             <button className='btn btn-primary w-100'>Login</button>
+
+            <div className='text-center mt-3'>
+              <p className='mb-0'>
+                Dont't have an account?{" "}
+                <span
+                  style={{cursor: 'pointer'}}>
+                  <a href="/register" className="text-decoration-none">Sign Up</a>
+                </span>
+              </p>
+            </div>
         </form>
       </div>
     </div>
